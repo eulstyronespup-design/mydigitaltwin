@@ -33,8 +33,8 @@ export default function Home() {
       } else {
         setError('Unexpected response');
       }
-    } catch (e: any) {
-      setError(e?.message ?? String(e));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
     } finally {
       setLoading(false);
     }

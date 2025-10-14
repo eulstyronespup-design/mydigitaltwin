@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@upstash/vector": "^1.2.2",
+    "groq": "^4.10.2",
     "next": "15.5.5",
     "openai": "^6.3.0",
     "react": "19.1.0",
