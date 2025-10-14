@@ -1,6 +1,45 @@
+'use client';
+
 import Image from "next/image";
+import React, { useState } from 'react';
 
 export default function Home() {
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function ask() {
+    setLoading(true);
+    setError(null);
+    setAnswer(null);
+    try {
+      const payload = {
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'chat',
+        params: { question, topK: 3 },
+      };
+      const resp = await fetch('/api/mcp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await resp.json();
+      if (data?.result?.answer) {
+        setAnswer(data.result.answer);
+      } else if (data?.error?.message) {
+        setError(data.error.message);
+      } else {
+        setError('Unexpected response');
+      }
+    } catch (e: any) {
+      setError(e?.message ?? String(e));
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
@@ -98,6 +137,49 @@ export default function Home() {
           Go to nextjs.org →
         </a>
       </footer>
+
+      <main className="min-h-screen flex flex-col items-center justify-start p-8 gap-6">
+        <h1 className="text-2xl font-semibold">Digital Twin — MCP Test</h1>
+        <textarea
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          rows={4}
+          placeholder="Ask about Euls Tyrone's background..."
+          className="w-full max-w-2xl rounded-md border p-3"
+        />
+        <div className="flex gap-3">
+          <button
+            onClick={ask}
+            disabled={loading || !question.trim()}
+            className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+          >
+            {loading ? 'Asking...' : 'Ask MCP'}
+          </button>
+          <button
+            onClick={() => {
+              setQuestion('');
+              setAnswer(null);
+              setError(null);
+            }}
+            className="px-4 py-2 border rounded"
+          >
+            Reset
+          </button>
+        </div>
+
+        {error && (
+          <div className="max-w-2xl w-full p-3 border rounded bg-red-50 text-red-700">
+            Error: {error}
+          </div>
+        )}
+
+        {answer && (
+          <div className="max-w-2xl w-full p-4 border rounded bg-gray-50">
+            <h2 className="font-semibold mb-2">Answer</h2>
+            <div className="whitespace-pre-wrap">{answer}</div>
+          </div>
+        )}
+      </main>
     </div>
   );
 }
