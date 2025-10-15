@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "digital-twin-mcp": {
+      "type": "http",
+      "url": "https://mydigitaltwin-xi9r.vercel.app/api/mcp",
+      "timeout": 30000,
+      "description": "Digital Twin RAG MCP Server for interview preparation"
+    }
+  }
+}
