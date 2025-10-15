@@ -1,0 +1,41 @@
+{
+  "name": "Euls Tyrone Pol Batulan",
+  "personal_info": {
+    "birth_date": "2002-09-06",
+    "birth_place": "Piat, Cagayan, Philippines",
+    "nationality": "Filipino",
+    "civil_status": "Single",
+    "contact": {
+      "phone": "09774404972",
+      "email": "eulstyrone.spup@gmail.com",
+      "address": "Poblacion 2, Piat, Cagayan"
+    }
+  },
+  "education": [
+    {
+      "level": "Elementary",
+      "school": "Piat Central Elementary School",
+      "years": "2009-2015"
+    },
+    {
+      "level": "High School",
+      "school": "Piat National High School",
+      "years": "2016-2019"
+    },
+    {
+      "level": "Senior High",
+      "school": "St. Paul University Philippines",
+      "years": "2019-2021"
+    },
+    {
+      "level": "College",
+      "school": "St. Paul University Philippines",
+      "course": "BS IT AI",
+      "years": "2021-Present"
+    }
+  ],
+  "skills": {
+    "core": ["Database Management", "Data Modelling", "Data Analysis", "SQL", "Data Entry", "Prompt Engineering"]
+  },
+  "career_objective": "To improve my skills and gain knowledge in IT and AI."
+}

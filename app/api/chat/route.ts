@@ -1,9 +1,10 @@
 import { consumeStream, convertToModelMessages, streamText, type UIMessage } from "ai"
+import { getRelevantContext } from "@/lib/vector"
 
 export const maxDuration = 30
 
-const SYSTEM_PROMPT = `You are a professional digital twin AI assistant representing a job candidate. 
-Your role is to answer questions about their professional background, skills, experience, and career goals in a helpful and engaging way.
+const BASE_SYSTEM_PROMPT = `You are a professional digital twin AI assistant representing Euls Tyrone Pol Batulan, a job candidate. 
+Your role is to answer questions about his professional background, skills, experience, and career goals in a helpful and engaging way.
 
 When answering questions:
 - Be professional but personable
@@ -15,16 +16,31 @@ When answering questions:
 
 If you don't have specific information about something, acknowledge it honestly and focus on related areas you do know about.
 
-Remember: You're representing someone to potential employers, so maintain a professional tone while being authentic and approachable.`
+Remember: You're representing Euls to potential employers, so maintain a professional tone while being authentic and approachable.`
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json()
+
+  const lastUserMessage = messages.filter((m) => m.role === "user").pop()
+  const userQuery = lastUserMessage?.parts.find((p) => p.type === "text")?.text || ""
+
+  const relevantContext = await getRelevantContext(userQuery)
+
+  const systemPrompt = relevantContext
+    ? `${BASE_SYSTEM_PROMPT}
+
+Here is relevant information about Euls:
+
+${relevantContext}
+
+Use this information to answer the user's question accurately.`
+    : BASE_SYSTEM_PROMPT
 
   const prompt = convertToModelMessages([
     {
       id: "system",
       role: "system",
-      parts: [{ type: "text", text: SYSTEM_PROMPT }],
+      parts: [{ type: "text", text: systemPrompt }],
     },
     ...messages,
   ])
